@@ -1,0 +1,176 @@
+import os
+import sys
+
+# Define the filename for our task database (a simple text file)
+# Demonstrates: Constant usage, file path concepts.
+TASKS_FILE = "tasks.txt"
+
+def load_tasks():
+    """
+    Reads tasks from the text file.
+    Demonstrates: File reading (Input), List data structure, Exception handling.
+    """
+    tasks = []
+    # Using 'with open' ensures the file closes automatically.
+    try:
+        with open(TASKS_FILE, "r") as f:
+            # Read lines and strip trailing newlines
+            for line in f:
+                tasks.append(line.strip())
+    except FileNotFoundError:
+        # If the file doesn't exist (e.g., first time running), return an empty list.
+        return []
+    except Exception as e:
+        print(f"An unexpected error occurred while loading tasks: {e}")
+        return []
+    return tasks
+
+def save_tasks(tasks):
+    """
+    Writes the list of tasks to the text file.
+    Demonstrates: File writing (Output), Iteration (looping through a list).
+    """
+    try:
+        with open(TASKS_FILE, "w") as f:
+            for task in tasks:
+                # Add a newline after each task so they save on separate lines
+                f.write(task + "\n")
+    except Exception as e:
+        print(f"An unexpected error occurred while saving tasks: {e}")
+
+def add_task(tasks):
+    """
+    Adds a new task to the list and saves.
+    Demonstrates: User Input (Input), List manipulation (append), Function parameters.
+    """
+    task_name = input("\nEnter the task to add: ").strip()
+    if not task_name:
+        print("Error: Task name cannot be empty.")
+        return
+
+    # Store the task with an '[ ]' prefix to show it's not complete.
+    # Demonstrates: String concatenation.
+    formatted_task = f"[ ] {task_name}"
+    tasks.append(formatted_task)
+    save_tasks(tasks)
+    print(f"Task '{task_name}' added successfully.")
+
+def view_tasks(tasks):
+    """
+    Displays the current task list.
+    Demonstrates: Iteration (looping with index), String formatting.
+    """
+    if not tasks:
+        print("\nYour task list is empty.")
+        return
+
+    print("\n--- Daily Task Organizer ---")
+    # enumerate() gives us both the index and the item in one step.
+    # Start counting from 1 for user convenience.
+    for index, task in enumerate(tasks, start=1):
+        print(f"{index}. {task}")
+
+def complete_task(tasks):
+    """
+    Marks a specific task as complete ('[x]').
+    Demonstrates: Exception handling (try/except), List slicing/modification, Data structures.
+    """
+    view_tasks(tasks)
+    if not tasks:
+        return
+
+    try:
+        # Get user choice, convert to an integer.
+        choice = int(input("\nEnter the number of the task to mark as complete: "))
+        
+        # Verify the choice is valid (within the list range).
+        if 1 <= choice <= len(tasks):
+            # Tasks are 0-indexed internally, so subtract 1.
+            task_index = choice - 1
+            current_task = tasks[task_index]
+            
+            # Use slicing to replace the prefix '[ ]' with '[x]'.
+            # Demonstrates: String slicing.
+            completed_task = "[x]" + current_task[3:]
+            
+            # Update the list and save.
+            tasks[task_index] = completed_task
+            save_tasks(tasks)
+            print("Task marked as complete.")
+        else:
+            print("Error: Invalid task number.")
+            
+    except ValueError:
+        # Happens if the user types something that isn't a number.
+        print("Error: Please enter a number.")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+
+def delete_task(tasks):
+    """
+    Permanently removes a task from the list.
+    Demonstrates: Exception handling (try/except), List manipulation (pop), Data structures.
+    """
+    view_tasks(tasks)
+    if not tasks:
+        return
+
+    try:
+        choice = int(input("\nEnter the number of the task to delete: "))
+        
+        if 1 <= choice <= len(tasks):
+            task_index = choice - 1
+            # pop() removes the item at the specific index.
+            removed_task = tasks.pop(task_index)
+            save_tasks(tasks)
+            print(f"Task '{removed_task[4:]}' deleted.")
+        else:
+            print("Error: Invalid task number.")
+            
+    except ValueError:
+        print("Error: Please enter a number.")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+
+def main():
+    """
+    Main function to run the command-line interface.
+    Demonstrates: While loops, Conditional Logic (if/elif/else), User Input, System interaction.
+    """
+    # Load existing tasks when the script starts.
+    tasks = load_tasks()
+
+    while True:
+        # Display the main menu.
+        print("\n--- DTO Main Menu ---")
+        print("1. Add a Task")
+        print("2. View Tasks")
+        print("3. Mark Task as Complete")
+        print("4. Delete a Task")
+        print("5. Exit")
+        
+        # Get the user's choice.
+        choice = input("Select an option (1-5): ").strip()
+        
+        # Branching logic based on the user's input.
+        if choice == '1':
+            add_task(tasks)
+        elif choice == '2':
+            view_tasks(tasks)
+        elif choice == '3':
+            complete_task(tasks)
+        elif choice == '4':
+            delete_task(tasks)
+        elif choice == '5':
+            # Exit the loop and the script.
+            print("Exiting Daily Task Organizer. Goodbye!")
+            # sys.exit() can cleanly exit Python scripts.
+            sys.exit(0)
+        else:
+            # Handle any inputs that are not '1'-'5'.
+            print("Error: Invalid option. Please try again.")
+
+if __name__ == "__main__":
+    # Ensure the script only runs when executed directly.
+    # Demonstrates: Modules and direct execution concepts.
+    main()
