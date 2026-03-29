@@ -22,7 +22,7 @@ Follow these clear steps to set up the project on your machine.
 
 1.  **Clone the Repository:**
     ```bash
-    git clone [https://github.com/your-github-username/daily-task-organizer.git](https://github.com/your-github-username/daily-task-organizer.git)
+https://github.com/sunkudeepak203/fundamentals-of-AIML
     cd daily-task-organizer
     ```
 
