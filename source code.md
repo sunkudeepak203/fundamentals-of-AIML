@@ -173,3 +173,6 @@ if __name__ == "__main__":
     # Ensure the script only runs when executed directly.
     # Covers: Modules and direct execution concepts.
     main()
+output
+<img width="1120" height="706" alt="Screenshot 2026-03-30 213713" src="https://github.com/user-attachments/assets/c54cf667-9984-42f4-9ff2-b448329accbc" />
+
